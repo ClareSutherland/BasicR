@@ -1,0 +1,63 @@
+---
+title: "R workshop 2"
+output: html_document
+---
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring your analysis output. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r Start}
+setwd("/Users/yongzhi/Dropbox/R workshop/RWorkshop2")
+list.files()
+library(ggplot2)
+library(psych)
+```
+
+```{r load dataset}
+DuckData <- read.csv("DuckGroups.csv", header = TRUE, na.strings = "")
+str(DuckData)
+```
+
+```{r Descriptives}
+describe(DuckData$DuckCategPerform)
+describeBy(DuckData$DuckCategPerform, group = DuckData$Group)
+describeBy(DuckData$DuckCategPerform, group = DuckData$Group, mat = TRUE)
+describeBy(DuckData$Phobiascore, group = DuckData$Group, mat = TRUE)
+```
+
+```{r T-test}
+t.test(DuckCategPerform ~ Group, data = DuckData, var.equal = TRUE)
+```
+
+```{r Corr}
+DuckPhobicPeople <- DuckData[DuckData$Group == ("DuckPhobic"),]
+cor.test(DuckPhobicPeople$DuckCategPerform, DuckPhobicPeople$Phobiascore, method = "pearson")
+regresults <- lm(DuckCategPerform ~ Phobiascore, data = DuckPhobicPeople)
+summary(regresults)
+```
+
+```{r Plots}
+#Boxplot for Group differences in Duck Categorisation Performance
+ggplot(DuckData, aes(Group,DuckCategPerform)) + geom_boxplot() + xlab("Duck Phobia Group") + ylab("Categorisation Performance")
+
+#Scatterplot for the relationship between Phobiascore and Duck Categorisation Performance in Duck Phobic People
+ggplot(DuckPhobicPeople, aes(DuckCategPerform, Phobiascore)) + geom_point() + xlab("Categorisation score") + ylab("Phobia Score")
+```
+
+```{r EXTRA STUFF}
+
+#Between-subjects ANOVA for Group differences in categorization performance
+ANOVAmod <- aov(DuckCategPerform ~ Group, data = DuckData)
+summary(ANOVAmod)
+
+#Scatterplot for the relationship between Phobiascore and Duck Categorisation Performance in Duck Phobic People with a fitted regression line (the geom_smooth function. lm refers to linear model)
+ggplot(DuckPhobicPeople, aes(DuckCategPerform, Phobiascore)) + geom_point() + geom_smooth(method = lm,se = FALSE) + xlab("Categorisation score") + ylab("Phobia Score")
+
+#Histogram for duck categorisation performance. 
+ggplot(DuckData, aes(DuckCategPerform)) + geom_histogram(binwidth=.03, alpha=.4) + xlab("Categorisation Performance")
+
+#But wait! There are two groups of participants, LikesDucks and DuckPhobic. Let's use the fill function to colour the histogram so that we know which columns belong to which group.
+ggplot(DuckData, aes(DuckCategPerform, fill = Group)) + geom_histogram(binwidth=.03, alpha=.4) + xlab("Categorisation Performance")
+```
+
