@@ -1,5 +1,6 @@
 ---
 title: "R workshop 2"
+author: Yong Zhi Foo
 output: html_document
 ---
 
@@ -8,10 +9,18 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
 ```{r Start}
-setwd("/Users/yongzhi/Dropbox/R workshop/RWorkshop2")
+
+#if you don't have RMarkdown installed, need to install it:
+#install.packages("rmarkdown")
+
+#Set working directory 
+#Note you need to replace this filepath with your current directory
+setwd("/Users/00089951/Dropbox/RTWs/R workshop materials 2019/RWorkshop2")
 list.files()
-library(ggplot2)
+
+#Load packages
 library(psych)
+library(ggplot2)
 ```
 
 ```{r load dataset}
